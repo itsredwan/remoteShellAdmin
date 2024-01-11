@@ -9,9 +9,12 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_FULL_SPECIAL_CH
         if ((time() - strtotime($lastPing)) <= 180) {
             setDataToJSON(["id" => $p["clientID"], "data" => ["command" => $p["sendCommand"], "response" => ""]]);
             $response = getDataFromJSON($p["clientID"], "response");
-            while (empty($response)) {
+            $startTime = time();
+            $timeout = 60;
+            while (empty($response) && (time() - $startTime) < $timeout) {
                 $response = getDataFromJSON($p["clientID"], "response");
             }
+            if(empty($response)) $response = "Client didn't respond for " . $timeout . " seconds";
             $history = getDataFromJSON($p["clientID"], "history") . $response . "<br><br>";
             setDataToJSON(["id" => $p["clientID"], "data" => ["history" => $history]]);
             echo json_encode([["id" => "response", "content" => $history], ["id" => "status", "content" => statusView(["computerName" => $p["clientID"], "lastPing" => $lastPing])]]);
