@@ -68,7 +68,7 @@ $(document).on("click", "#dSubmit", function (event) {
     var formAction = $("#dynamicForm").attr("action");
     var outputElement = $("#response");
     if (!outputElement.length) {
-      $("#dynamicForm").append('<div id="response"></div>');
+        $("#dynamicForm").append('<div id="response"></div>');
     }
     var submitButton = $("#dSubmit");
     var loading = $("#loading");
@@ -76,21 +76,23 @@ $(document).on("click", "#dSubmit", function (event) {
     submitButton.prop("disabled", true);
     var vResponse = $("#response");
     $.ajax({
-      type: "POST",
-      url: formAction,
-      data: new FormData($("#dynamicForm")[0]),
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $("#sendCommand").val("");
-        submitButton.prop("disabled", false);
-        loading.hide();
-        vResponse.removeClass();
-        try {
-          var responseData = JSON.parse(response);
-          responseData.forEach(function (item) { $("#" + item.id).html(item.content); if (item.class) { $("#" + item.id).removeClass().addClass(item.class); } });
-        } catch (error) { vResponse.html("Error: " + error); vResponse.removeClass().addClass("mt-4 alert alert-danger alert-dismissible fade show"); }
-      },
-      error: function (error) { submitButton.prop("disabled", false); $("#loading").hide(); $("#response").html("Error: " + error.statusText); $("#response").removeClass().addClass("mt-4 alert alert-danger alert-dismissible fade show"); }
+        type: "POST",
+        url: formAction,
+        data: new FormData($("#dynamicForm")[0]),
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            $("#sendCommand").val("");
+            submitButton.prop("disabled", false);
+            loading.hide();
+            vResponse.removeClass();
+            try {
+                var responseData = JSON.parse(response);
+                responseData.forEach(function (item) { $("#" + item.id).html(item.content); if (item.class) { $("#" + item.id).removeClass().addClass(item.class); } });
+            } catch (error) { vResponse.html("Error: " + error); vResponse.removeClass().addClass("mt-4 alert alert-danger alert-dismissible fade show"); }
+            var scrollHeight = vResponse.prop('scrollHeight');
+            vResponse.scrollTop(scrollHeight);
+        },
+        error: function (error) { submitButton.prop("disabled", false); $("#loading").hide(); $("#response").html("Error: " + error.statusText); $("#response").removeClass().addClass("mt-4 alert alert-danger alert-dismissible fade show"); }
     });
-  });
+});
