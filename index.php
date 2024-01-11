@@ -120,6 +120,7 @@ function connectionWithClient() {
         return "Central server successfully executed command";
     } else {
         setDataToJSON(["id" => $data["computerName"], "data" => ["response" => $ext . "Client did not responded"]]);
+        return "Central server did not receive proper response";
     }
 }
 
